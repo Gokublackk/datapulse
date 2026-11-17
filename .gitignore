@@ -146,3 +146,5 @@ lerna-debug.log*
 serviceAccount*.json
 google-credentials*.json
 *.pem
+
+!frontend/src/lib/
