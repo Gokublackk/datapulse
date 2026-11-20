@@ -31,9 +31,26 @@ def create_resilient_engine():
         if database_url.startswith("postgres://"):
             database_url = database_url.replace("postgres://", "postgresql://", 1)
 
+        is_local = "localhost" in database_url or "127.0.0.1" in database_url
+        if is_local:
+            # If on Render or cloud where local postgres is not running, NEVER hang connecting to localhost
+            if not is_port_open("127.0.0.1", 5432):
+                logger.info("Local PostgreSQL port is not running. Using local SQLite.")
+                from pathlib import Path
+                db_file = Path(__file__).resolve().parents[2] / "datapulse.db"
+                sqlite_url = f"sqlite:///{db_file.as_posix()}"
+                return create_engine(
+                    sqlite_url,
+                    connect_args={"check_same_thread": False}
+                )
+
         if database_url.startswith("postgresql"):
             try:
-                test_engine = create_engine(database_url, pool_pre_ping=True)
+                test_engine = create_engine(
+                    database_url,
+                    pool_pre_ping=True,
+                    connect_args={"connect_timeout": 3}
+                )
                 with test_engine.connect():
                     pass
                 logger.info("Connected to PostgreSQL successfully.")
