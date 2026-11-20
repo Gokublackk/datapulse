@@ -26,11 +26,14 @@ def is_port_open(host="127.0.0.1", port=5432) -> bool:
 
 def create_resilient_engine():
     database_url = settings.DATABASE_URL
-    if database_url and database_url.startswith("postgresql"):
-        # Quickly check if postgres port is open
-        if is_port_open("localhost", 5432):
+    if database_url:
+        # Render and other cloud providers give postgres://, which SQLAlchemy 2.0 requires as postgresql://
+        if database_url.startswith("postgres://"):
+            database_url = database_url.replace("postgres://", "postgresql://", 1)
+
+        if database_url.startswith("postgresql"):
             try:
-                test_engine = create_engine(database_url)
+                test_engine = create_engine(database_url, pool_pre_ping=True)
                 with test_engine.connect():
                     pass
                 logger.info("Connected to PostgreSQL successfully.")
@@ -38,7 +41,13 @@ def create_resilient_engine():
             except Exception as exc:
                 logger.warning(f"PostgreSQL connection failed ({exc}). Using SQLite.")
         else:
-            logger.info("PostgreSQL port 5432 is not running. Using local SQLite.")
+            try:
+                test_engine = create_engine(database_url)
+                with test_engine.connect():
+                    pass
+                return test_engine
+            except Exception as exc:
+                logger.warning(f"Database connection failed ({exc}). Using SQLite.")
     
     # Fallback SQLite database (always store in backend root so all processes share the same DB)
     from pathlib import Path
