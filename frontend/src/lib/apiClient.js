@@ -81,10 +81,13 @@ apiClient.interceptors.response.use(
       window.dispatchEvent(new CustomEvent(UNAUTHORIZED_EVENT, { detail: { status } }))
     }
 
+    const isLocalhostFallback = !import.meta.env.DEV && (API_BASE_URL.includes('127.0.0.1') || API_BASE_URL.includes('localhost'))
     const message =
       detail ||
       (status === 0
-        ? `Cannot reach the DataPulse API at ${API_BASE_URL}. Is the backend running?`
+        ? (isLocalhostFallback
+            ? `Cannot reach backend at ${API_BASE_URL}. In Vercel, please set VITE_API_BASE_URL to your Render backend URL (e.g. https://your-backend.onrender.com) in Project Settings > Environment Variables and redeploy.`
+            : `Cannot reach the DataPulse API at ${API_BASE_URL}. Is the Render backend awake and running?`)
         : status === 401
           ? 'Your session expired. Please sign in again.'
           : status === 403
