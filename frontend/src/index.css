@@ -656,3 +656,106 @@
   box-shadow: var(--dp-shadow-lg), 0 0 30px rgba(139, 108, 255, 0.28);
 }
 
+/* ==========================================================================
+   Cyber Engine & Futuristic Studio Design Tokens
+   ========================================================================== */
+
+.bg-cyber-grid {
+  background-size: 32px 32px;
+  background-image: 
+    linear-gradient(to right, rgba(139, 108, 255, 0.06) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(139, 108, 255, 0.06) 1px, transparent 1px);
+}
+.dark .bg-cyber-grid {
+  background-image: 
+    linear-gradient(to right, rgba(139, 108, 255, 0.1) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(139, 108, 255, 0.1) 1px, transparent 1px);
+}
+
+.dp-card-glow {
+  position: relative;
+  border: 1px solid var(--dp-line);
+  border-radius: var(--radius-card);
+  background: var(--dp-surface);
+  box-shadow: var(--dp-shadow);
+  transition: transform 0.24s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.24s ease, border-color 0.24s ease;
+}
+.dp-card-glow:hover {
+  border-color: var(--dp-brand);
+  box-shadow: 0 16px 40px -10px var(--dp-ring), 0 0 25px -4px rgba(139, 108, 255, 0.25);
+  transform: translateY(-3px);
+}
+
+.pulse-radar {
+  position: relative;
+}
+.pulse-radar::after {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  border-radius: 9999px;
+  border: 1.5px solid currentColor;
+  opacity: 0.8;
+  animation: radarRipple 2.2s cubic-bezier(0, 0.2, 0.8, 1) infinite;
+}
+
+@keyframes radarRipple {
+  0% { transform: scale(0.85); opacity: 1; }
+  100% { transform: scale(2.4); opacity: 0; }
+}
+
+@keyframes floatSlow {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-10px) rotate(2deg); }
+}
+
+.animate-float {
+  animation: floatSlow 6s ease-in-out infinite;
+}
+
+.animate-pulse-slow {
+  animation: pulseGlow 3s ease-in-out infinite;
+}
+
+@keyframes pulseGlow {
+  0%, 100% { opacity: 0.45; transform: scale(1); }
+  50% { opacity: 0.85; transform: scale(1.04); }
+}
+
+/* Glowing Border Wrap for Hero & Login */
+.glow-border-wrap {
+  position: relative;
+  padding: 1.5px;
+  border-radius: 1.5rem;
+  background: linear-gradient(135deg, rgba(139, 108, 255, 0.6), rgba(62, 200, 255, 0.4), rgba(62, 221, 160, 0.5));
+}
+.glow-border-wrap > * {
+  border-radius: calc(1.5rem - 1.5px);
+}
+
+/* High-tech HUD Corner Accents */
+.hud-corner {
+  position: relative;
+}
+.hud-corner::before,
+.hud-corner::after {
+  content: '';
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  pointer-events: none;
+}
+.hud-corner::before {
+  top: 6px;
+  left: 6px;
+  border-top: 2px solid var(--dp-brand);
+  border-left: 2px solid var(--dp-brand);
+}
+.hud-corner::after {
+  bottom: 6px;
+  right: 6px;
+  border-bottom: 2px solid var(--dp-accent);
+  border-right: 2px solid var(--dp-accent);
+}
+
+

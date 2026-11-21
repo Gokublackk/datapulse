@@ -33,18 +33,33 @@ function ApiStatus() {
   const online = state === 'online'
   return (
     <div
-      className={`dp-card-quiet flex items-start gap-2 p-2.5 text-xs ${online ? 'text-muted' : 'text-danger'}`}
+      className={`rounded-xl border p-2.5 text-xs transition-all duration-300 ${
+        online
+          ? 'border-success/30 bg-success/5 text-ink'
+          : 'border-danger/40 bg-danger/10 text-danger'
+      }`}
       title={API_BASE_URL}
     >
-      {online ? (
-        <CircleCheckBig size={13} className="mt-0.5 shrink-0 text-success" aria-hidden="true" />
-      ) : (
-        <TriangleAlert size={13} className="mt-0.5 shrink-0" aria-hidden="true" />
-      )}
-      <span className="min-w-0">
-        <span className="block font-bold">{online ? 'API connected' : 'API unreachable'}</span>
-        <span className="block truncate text-faint">{online ? 'Backend responding' : 'Start the FastAPI server'}</span>
-      </span>
+      <div className="flex items-center gap-2">
+        <span className="relative flex size-2 shrink-0">
+          <span
+            className={`absolute inline-flex size-full rounded-full opacity-75 ${
+              online ? 'bg-success animate-ping' : 'bg-danger'
+            }`}
+          />
+          <span
+            className={`relative inline-flex size-2 rounded-full ${
+              online ? 'bg-success' : 'bg-danger'
+            }`}
+          />
+        </span>
+        <span className="font-extrabold text-[0.6875rem] tracking-wider uppercase">
+          {online ? 'API Engine Active' : 'API Unreachable'}
+        </span>
+      </div>
+      <p className="mt-1 truncate font-mono text-[0.625rem] text-faint">
+        {online ? 'FastAPI • Cloud Connected' : 'Checking Render server connection…'}
+      </p>
     </div>
   )
 }
